@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Git 行数变更可视化</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>每日 Git 行数变更</h2>
+    <canvas id="myChart" width="1000" height="500"></canvas>
+
+    <script>
+        fetch("/data")
+            .then(res => res.json())
+            .then(data => {
+                const dates = data.map(d => d.date);
+                const added = data.map(d => d.added);
+                const deleted = data.map(d => d.deleted);
+
+                new Chart(document.getElementById("myChart"), {
+                    type: "line",
+                    data: {
+                        labels: dates,
+                        datasets: [
+                            {
+                                label: "Added Lines",
+                                data: added,
+                                borderColor: "green",
+                                fill: false
+                            },
+                            {
+                                label: "Deleted Lines",
+                                data: deleted,
+                                borderColor: "red",
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: "Date"
+                                }
+                            },
+                            y: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: "Lines"
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+</body>
+</html>
