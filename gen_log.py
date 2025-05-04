@@ -4,7 +4,6 @@ import subprocess
 repo_path = input("请输入你想分析的 Git 仓库路径：").strip()
 author = input("请输入你的 Git 名或邮箱：").strip()
 
-# 检查路径是否有效
 if not os.path.isdir(repo_path) or not os.path.isdir(os.path.join(repo_path, ".git")):
     print("❌ 不是有效的 Git 仓库路径")
     exit(1)

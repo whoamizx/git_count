@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <title>Git 行数变更可视化</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
 </head>
 <body>
-    <h2>每日 Git 行数变更</h2>
+    <h2>Git 每日行数变更分析</h2>
+
+    <div id="text-summary" style="font-family: monospace; margin-bottom: 20px;"></div>
+
     <canvas id="myChart" width="1000" height="500"></canvas>
 
     <script>
@@ -17,41 +24,45 @@
                 const added = data.map(d => d.added);
                 const deleted = data.map(d => d.deleted);
 
+                const summaryContainer = document.getElementById("text-summary");
+                data.forEach(d => {
+                    const line = document.createElement("div");
+                    line.textContent = `📅 ${d.date}: 🟢 Added ${d.added} lines, 🔴 Deleted ${d.deleted} lines`;
+                    summaryContainer.appendChild(line);
+                });
+
                 new Chart(document.getElementById("myChart"), {
-                    type: "line",
+                    type: "bar",
                     data: {
                         labels: dates,
                         datasets: [
                             {
                                 label: "Added Lines",
                                 data: added,
-                                borderColor: "green",
-                                fill: false
+                                backgroundColor: "rgba(75, 192, 192, 0.6)"
                             },
                             {
                                 label: "Deleted Lines",
                                 data: deleted,
-                                borderColor: "red",
-                                fill: false
+                                backgroundColor: "rgba(255, 99, 132, 0.6)"
                             }
                         ]
                     },
                     options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: "Daily Git Code Changes"
+                            }
+                        },
                         responsive: true,
                         scales: {
                             x: {
-                                display: true,
-                                title: {
-                                    display: true,
-                                    text: "Date"
-                                }
+                                stacked: true
                             },
                             y: {
-                                display: true,
-                                title: {
-                                    display: true,
-                                    text: "Lines"
-                                }
+                                stacked: true,
+                                beginAtZero: true
                             }
                         }
                     }
@@ -59,4 +70,5 @@
             });
     </script>
 </body>
+
 </html>
